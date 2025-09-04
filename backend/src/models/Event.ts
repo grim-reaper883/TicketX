@@ -22,4 +22,4 @@ const EventSchema: Schema = new Schema({
   price: { type: Number, required: true }
 });
 
-export default mongoose.model<IEvent>("Event", EventSchema);
+export default mongoose.model<IEvent>("events", EventSchema);
