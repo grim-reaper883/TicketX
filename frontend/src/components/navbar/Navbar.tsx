@@ -11,7 +11,7 @@ import {
 import { Avatar } from "../ui/avatar";
 import { LogOut, Ticket, UserRound } from "lucide-react";
 
-const signedIn = true;
+const signedIn = false;
 
 const Navbar = () => {
   return (
@@ -19,8 +19,8 @@ const Navbar = () => {
       <div>
         <h1 className=" text-xl font-bold">TicketX</h1>
       </div>
-      <div>
-        <ul className=" flex space-x-6 font-semibold cursor-pointer">
+      <div className="">
+        <ul className=" flex space-x-6 font-semibold cursor-pointer ">
           <Link href={"/"}>
             <li>HOME</li>
           </Link>
