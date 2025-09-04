@@ -60,7 +60,9 @@ const Navbar = () => {
           </>
         ) : (
           <>
+            <Link href={'/signin'}>
             <Button className=" rounded-full font-bold">Sign In</Button>
+            </Link>
           </>
         )}
       </div>
