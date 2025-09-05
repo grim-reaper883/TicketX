@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Clock, DollarSign, Building2 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Swal from 'sweetalert2'
+import { Clock, DollarSign, Building2, Trash } from "lucide-react";
 
 interface EventItem {
   id: string | number;
@@ -15,8 +13,7 @@ interface EventItem {
   price: number | string;
 }
 
-const EventCard = () => {
-  const { data: session } = useSession();
+const ManageEvent = () => {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,25 +49,18 @@ const EventCard = () => {
       minute: "2-digit",
     });
   };
-  
-  const handleBuyTicket = () => {
-    if (!session) {
-      Swal.fire({
-        title: "Please sign in to buy ticket!",
-        position: "top-end",
-      });
-      return;
-    }
-
-    // TODO: handle buy ticket logic for signed-in users
-    console.log("Buying ticket...");
-  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <>
+      <div className=" mt-7 cursor-pointer bg-gradient-to-r from-cyan-700 to-slate-900 rounded-xl p-3 text-center font-bold max-w-xl mx-auto">
+        <h1 className="text-2xl font-extrabold">
+          <span className="mr-1">+</span> Add New Event
+        </h1>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-8 ">
         {events.map((event) => {
           const availableTickets = Math.max(
@@ -145,17 +135,24 @@ const EventCard = () => {
                   <span className="text-gray-400 text-sm ml-1">BDT</span>
                 </div>
 
-                <button onClick={handleBuyTicket} className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-700 hover:to-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
+                <button className="bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-700 hover:to-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg">
                   Buy Ticket
                 </button>
               </div>
 
               {/* Event ID */}
               <div className="mt-4 pt-4 border-t border-gray-800">
-                <span className="text-gray-500 text-xs">
-                  Event ID: {event.id}
-                </span>
+                <div className=" flex items-center justify-between">
+                  <span className="text-gray-500 text-xs">
+                    Event ID: {event.id}
+                  </span>
+                  <div className=" text-red-500 cursor-pointer">
+                    <Trash />
+                  </div>
+                </div>
               </div>
+              {/* Delete button */}
+              <div></div>
             </div>
           );
         })}
@@ -164,4 +161,4 @@ const EventCard = () => {
   );
 };
 
-export default EventCard;
+export default ManageEvent;

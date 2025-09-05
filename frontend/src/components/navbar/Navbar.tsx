@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import {
@@ -10,10 +11,13 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar } from "../ui/avatar";
 import { LogOut, Ticket, UserRound } from "lucide-react";
-
-const signedIn = false;
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session, status } = useSession();
+  const signedIn = status === "authenticated";
+  const role = (session?.user as { role?: string } | undefined)?.role;
+
   return (
     <div className="flex justify-between bg-gradient-to-r from-cyan-700 to-slate-900 p-3 px-6 items-center rounded-full  my-4">
       <div>
@@ -27,6 +31,12 @@ const Navbar = () => {
           <Link href={"/event"}>
             <li>EVENT</li>
           </Link>
+          {/* Only show for admin */}
+          {role === "admin" && (
+            <Link href={"/manageEvent"}>
+              <li>MANAGE EVENT</li>
+            </Link>
+          )}
         </ul>
       </div>
       <div>
@@ -35,23 +45,26 @@ const Navbar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger>
                 <Avatar className=" flex items-center cursor-pointer ">
-                  <UserRound className=" bg-white text-black rounded-full h-10 w-10" />
+                  <UserRound className=" bg-white text-black rounded-full w-8 h-6 " />
                 </Avatar>
               </DropdownMenuTrigger>
               <DropdownMenuContent sideOffset={18} align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>{session.user?.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {/* <DropdownMenuItem>
                   <User className=" h-[1.2rem] w-[1.2rem] mr-2" />
                   Profile
                 </DropdownMenuItem> */}
-                <Link href={'/myTickets'}>
+                <Link href={"/myTickets"}>
                   <DropdownMenuItem>
                     <Ticket className=" h-[1.2rem] w-[1.2rem] mr-2" />
                     My Tickets
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuItem variant="destructive">
+                <DropdownMenuItem
+                  onClick={() => signOut()}
+                  variant="destructive"
+                >
                   <LogOut className=" h-[1.2rem] w-[1.2rem] mr-2" />
                   Logout
                 </DropdownMenuItem>
@@ -60,8 +73,13 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <Link href={'/signin'}>
-            <Button className=" rounded-full font-bold">Sign In</Button>
+            <Link href={"/signin"}>
+              <Button
+                onClick={() => signIn()}
+                className=" rounded-full font-bold"
+              >
+                Sign In
+              </Button>
             </Link>
           </>
         )}
