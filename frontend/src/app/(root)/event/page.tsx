@@ -5,6 +5,7 @@ import { Clock, DollarSign, Building2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
 import { ApiError, ticketApi } from "@/lib/api";
+import Loading from "./loading";
 
 interface EventItem {
   id: string | number;
@@ -46,7 +47,7 @@ const EventCard = () => {
     fetchEvents();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     // Pre-load my purchased tickets when signed-in
     async function fetchMine() {
       try {
@@ -63,7 +64,7 @@ const EventCard = () => {
       }
     }
     fetchMine();
-  }, [session]);
+  }, [session?.user?.email]);
 
   const formatDeadline = (dateString: string) => {
     const date = new Date(dateString);
@@ -105,13 +106,13 @@ const EventCard = () => {
       const data = await res.json();
 
       // Update UI: mark purchased + increment ticketsSold
-      setPurchased(prev => {
+      setPurchased((prev) => {
         const next = new Set(prev);
         next.add(String(event.id));
         return next;
       });
-      setEvents(prev =>
-        prev.map(e =>
+      setEvents((prev) =>
+        prev.map((e) =>
           String(e.id) === String(event.id)
             ? { ...e, ticketsSold: e.ticketsSold + 1 }
             : e
@@ -129,15 +130,24 @@ const EventCard = () => {
       const msg =
         err instanceof ApiError
           ? err.message
-          : (err?.message || "Failed to purchase ticket");
+          : err?.message || "Failed to purchase ticket";
       Swal.fire({ title: "Purchase failed", text: msg, icon: "error" });
     } finally {
       setBuyingId(null);
     }
   };
 
+  if (loading) {
+    // Show 6 placeholder cards while loading
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-8">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Loading key={index} />
+        ))}
+      </div>
+    );
+  }
 
-    if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
   return (
@@ -157,8 +167,20 @@ const EventCard = () => {
           const isExpired = new Date(event.deadline) < now;
           const isSoldOut = availableTickets <= 0;
           const isPurchased = purchased.has(String(event.id));
-          const disabled = isExpired || isSoldOut || isPurchased || buyingId === String(event.id);
-          const btnText = isPurchased ? "Purchased" : isSoldOut ? "Sold Out" : isExpired ? "Closed" : buyingId === String(event.id) ? "Buying..." : "Buy Ticket";
+          const disabled =
+            isExpired ||
+            isSoldOut ||
+            isPurchased ||
+            buyingId === String(event.id);
+          const btnText = isPurchased
+            ? "Purchased"
+            : isSoldOut
+            ? "Sold Out"
+            : isExpired
+            ? "Closed"
+            : buyingId === String(event.id)
+            ? "Buying..."
+            : "Buy Ticket";
 
           return (
             <div
@@ -226,18 +248,17 @@ const EventCard = () => {
                 <button
                   onClick={() => handleBuyTicket(event)}
                   disabled={disabled}
-                  className={`bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-700 hover:to-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg ${disabled ? "opacity-60 cursor-not-allowed hover:scale-100" : ""}`}
+                  className={`bg-gradient-to-r from-cyan-600 to-teal-500 hover:from-cyan-700 hover:to-teal-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg ${
+                    disabled
+                      ? "opacity-60 cursor-not-allowed hover:scale-100"
+                      : ""
+                  }`}
                 >
                   {btnText}
                 </button>
               </div>
 
-              {/* Event ID */}
-              <div className="mt-4 pt-4 border-t border-gray-800">
-                <span className="text-gray-500 text-xs">
-                  Event ID: {event.id}
-                </span>
-              </div>
+              <div className="mt-4 pt-4 border-t border-gray-800"></div>
             </div>
           );
         })}

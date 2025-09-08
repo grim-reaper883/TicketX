@@ -20,26 +20,45 @@ const Navbar = () => {
 
   return (
     <div className="flex justify-between bg-gradient-to-r from-cyan-700 to-slate-900 p-3 px-6 items-center rounded-full  my-4">
-      <div>
-        <h1 className=" text-xl font-bold">TicketX</h1>
+      <div className=" flex-1 justify-start">
+        <Link href={"/"}>
+          <h1 className=" text-xl font-bold">TicketX</h1>
+        </Link>
       </div>
-      <div className="">
-        <ul className=" flex space-x-6 font-semibold cursor-pointer ">
+
+      <div className="flex-1 flex justify-center">
+        <ul className="flex space-x-1 text-sm cursor-pointer whitespace-nowrap">
           <Link href={"/"}>
-            <li>HOME</li>
+            <li className="relative px-3 py-2 transition-all duration-300 ease-in-out hover:text-cyan-200 hover:scale-105 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-gradient-to-r before:from-cyan-400 before:to-slate-300 before:transition-all before:duration-300 hover:before:w-full">
+              HOME
+            </li>
           </Link>
           <Link href={"/event"}>
-            <li>EVENT</li>
+            <li className="relative px-3 py-2 transition-all duration-300 ease-in-out hover:text-cyan-200 hover:scale-105 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-gradient-to-r before:from-cyan-400 before:to-slate-300 before:transition-all before:duration-300 hover:before:w-full">
+              EVENT
+            </li>
+          </Link>
+          <Link href={"/aboutUs"}>
+            <li className="relative px-3 py-2 transition-all duration-300 ease-in-out hover:text-cyan-200 hover:scale-105 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-gradient-to-r before:from-cyan-400 before:to-slate-300 before:transition-all before:duration-300 hover:before:w-full">
+              ABOUT US
+            </li>
+          </Link>
+          <Link href={"/blog"}>
+            <li className="relative px-3 py-2 transition-all duration-300 ease-in-out hover:text-cyan-200 hover:scale-105 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-gradient-to-r before:from-cyan-400 before:to-slate-300 before:transition-all before:duration-300 hover:before:w-full">
+              BLOG
+            </li>
           </Link>
           {/* Only show for admin */}
           {role === "admin" && (
             <Link href={"/manageEvent"}>
-              <li>MANAGE EVENT</li>
+              <li className="relative px-3 py-2 transition-all duration-300 ease-in-out hover:text-cyan-200 hover:scale-105 before:absolute before:bottom-0 before:left-0 before:w-0 before:h-0.5 before:bg-gradient-to-r before:from-cyan-400 before:to-slate-300 before:transition-all before:duration-300 hover:before:w-full">
+                MANAGE EVENT
+              </li>
             </Link>
           )}
         </ul>
       </div>
-      <div>
+      <div className=" flex flex-1 justify-end">
         {signedIn ? (
           <>
             <DropdownMenu>

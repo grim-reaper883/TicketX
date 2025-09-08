@@ -2,6 +2,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { ticketApi, ApiError } from "@/lib/api";
+import Loading from "./loading";
 
 interface TicketRow {
   id: string;
@@ -41,7 +42,7 @@ const MyTicketsPage = () => {
       day: "numeric",
     });
 
-  if (loading) return <div className="text-white p-6">Loading...</div>;
+  if (loading) return <Loading/>;
   if (error) return <div className="text-white p-6">{error}</div>;
   if (tickets.length === 0) return <div className="text-white p-6">No tickets yet.</div>;
 

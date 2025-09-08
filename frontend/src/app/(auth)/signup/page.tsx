@@ -48,9 +48,9 @@ const Signup = () => {
       );
       const data = await res.json();
       if (res.ok) {
-        setSuccess("Account created successfully! Redirecting to login...");
+        setSuccess("Account created successfully! Redirecting...");
         setTimeout(() => {
-          router.push("/signin");
+          router.push("/");
         }, 2000);
       } else {
         setError(data.error || "Failed to create account");
