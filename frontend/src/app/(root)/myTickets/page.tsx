@@ -39,7 +39,7 @@ const MyTicketsPage = () => {
               <th className="px-4 py-3">Ticket Code</th>
               <th className="px-4 py-3">Event</th>
               <th className="px-4 py-3">Purchase Date</th>
-              <th className="px-4 py-3">Actions</th>
+              {/* <th className="px-4 py-3">Actions</th> */}
             </tr>
           </thead>
           <tbody>
@@ -54,11 +54,7 @@ const MyTicketsPage = () => {
                   <p className="text-xs text-gray-400">{ticket.eventId}</p>
                 </td>
                 <td className="px-4 py-3">{formatDate(ticket.purchaseDate)}</td>
-                <td className="px-4 py-3">
-                  <button className="bg-cyan-600 hover:bg-cyan-500 px-3 py-1 rounded-md text-sm font-semibold transition">
-                    Download
-                  </button>
-                </td>
+                
               </tr>
             ))}
           </tbody>
