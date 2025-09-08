@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect, useState } from "react";
 import { Clock, DollarSign, Building2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Swal from "sweetalert2";
-import { ticketApi } from "@/lib/api";
+import { ApiError, ticketApi } from "@/lib/api";
 
 interface EventItem {
   id: string | number;

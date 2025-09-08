@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getSession } from "next-auth/react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
