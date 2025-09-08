@@ -4,6 +4,7 @@ import { Clock, DollarSign, Building2, Trash, Plus } from "lucide-react";
 import AdminGuard from "@/components/AdminGuard";
 import { adminApi, ApiError } from "@/lib/api";
 import CreateEventForm from "@/components/CreateEventForm";
+import Swal from "sweetalert2";
 
 interface EventItem {
   _id: string;
@@ -50,20 +51,36 @@ const ManageEvent = () => {
     }
   };
 
-  const handleDeleteEvent = async (eventId: string) => {
-    if (!confirm("Are you sure you want to delete this event?")) return;
+const handleDeleteEvent = async (eventId: string) => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!"
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        await adminApi.deleteEvent(eventId);
+        setEvents(events.filter((event) => event._id !== eventId));
 
-    try {
-      await adminApi.deleteEvent(eventId);
-      setEvents(events.filter((event) => event._id !== eventId));
-    } catch (err) {
-      if (err instanceof ApiError) {
-        alert(`Failed to delete event: ${err.message}`);
-      } else {
-        alert("Failed to delete event");
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your event has been deleted.",
+          icon: "success"
+        });
+      } catch (err) {
+        if (err instanceof ApiError) {
+          Swal.fire("Error", `Failed to delete event: ${err.message}`, "error");
+        } else {
+          Swal.fire("Error", "Failed to delete event", "error");
+        }
       }
     }
-  };
+  });
+};
 
   const formatDeadline = (dateString: string) => {
     const date = new Date(dateString);

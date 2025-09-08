@@ -72,3 +72,13 @@ export const adminApi = {
       method: "DELETE",
     }),
 };
+
+// User ticket APIs
+export const ticketApi = {
+  purchase: (eventId: string, couponCode?: string) =>
+    apiRequest("/tickets/purchase", {
+      method: "POST",
+      body: JSON.stringify({ eventId, couponCode }),
+    }),
+  myTickets: () => apiRequest("/tickets/mine"),
+};

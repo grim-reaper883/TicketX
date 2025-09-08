@@ -129,7 +129,7 @@ const Signup = () => {
               />
             </div>
             {/* Role Selection Field */}
-            <div className="relative">
+            {/* <div className="relative">
               <select
                 name="role"
                 value={formData.role}
@@ -141,7 +141,7 @@ const Signup = () => {
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
               </select>
-            </div>
+            </div> */}
 
             {/* Sign Up Button */}
             <button

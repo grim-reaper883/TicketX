@@ -1,11 +1,7 @@
 import express, { Request, Response } from "express";
 import Event from "../models/Event";
 import mongoose from "mongoose";
-import {
-  authtoken,
-  verifyAdmin,
-  requireAdmin,
-} from "../middleware/verifyadmin";
+import {requireAdmin} from "../middleware/verifyadmin";
 
 const router = express.Router();
 

@@ -1,25 +1,37 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { ticketApi, ApiError } from "@/lib/api";
+
+interface TicketRow {
+  id: string;
+  eventId: string;
+  eventTitle: string;
+  userId: string;
+  purchaseDate: string;
+  ticketCode: string;
+}
 
 const MyTicketsPage = () => {
-  // Example ticket data (normally from API)
-  const tickets = [
-    {
-      id: "1",
-      eventId: "event-001",
-      eventTitle: "Summer Music Festival",
-      userId: "user-001",
-      purchaseDate: "2025-08-13T10:00:00Z",
-      ticketCode: "ABC123XYZ",
-    },
-    {
-      id: "2",
-      eventId: "event-002",
-      eventTitle: "Tech Conference 2025",
-      userId: "user-001",
-      purchaseDate: "2025-09-01T15:30:00Z",
-      ticketCode: "XYZ789ABC",
-    },
-  ];
+  const [tickets, setTickets] = useState<TicketRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const res = await ticketApi.myTickets();
+        const data = await res.json();
+        setTickets(data);
+      } catch (err: any) {
+        console.log(typeof(err))
+        const msg = err instanceof ApiError ? err.message : (err?.message || "Failed to load tickets");
+        setError(msg);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
 
   const formatDate = (dateString: string): string =>
     new Date(dateString).toLocaleDateString("en-US", {
@@ -27,6 +39,10 @@ const MyTicketsPage = () => {
       month: "short",
       day: "numeric",
     });
+
+  if (loading) return <div className="text-white p-6">Loading...</div>;
+  if (error) return <div className="text-white p-6">{error}</div>;
+  if (tickets.length === 0) return <div className="text-white p-6">No tickets yet.</div>;
 
   return (
     <div className="text-white p-6">
@@ -39,7 +55,6 @@ const MyTicketsPage = () => {
               <th className="px-4 py-3">Ticket Code</th>
               <th className="px-4 py-3">Event</th>
               <th className="px-4 py-3">Purchase Date</th>
-              {/* <th className="px-4 py-3">Actions</th> */}
             </tr>
           </thead>
           <tbody>
@@ -54,7 +69,6 @@ const MyTicketsPage = () => {
                   <p className="text-xs text-gray-400">{ticket.eventId}</p>
                 </td>
                 <td className="px-4 py-3">{formatDate(ticket.purchaseDate)}</td>
-                
               </tr>
             ))}
           </tbody>

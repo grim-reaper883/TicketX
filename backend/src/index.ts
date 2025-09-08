@@ -4,6 +4,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import eventsRouter from "./routes/events";
 import authRouter from "./routes/auth"
+import ticketsRouter from "./routes/tickets";
 
 dotenv.config();
 
@@ -22,6 +23,9 @@ app.use("/events", eventsRouter);
 
 //auth route
 app.use("/auth", authRouter);
+
+//tickets route
+app.use("/tickets", ticketsRouter);
 
 //db connect
 connectDB().then(() => {
