@@ -1,10 +1,8 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Calendar, Clock, ArrowRight, User } from "lucide-react"
-import Link from "next/link"
-import Image from "next/image"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar, Clock, ArrowRight, User } from "lucide-react";
+import Image from "next/image";
 
 const blogPosts = [
   {
@@ -73,15 +71,22 @@ const blogPosts = [
     category: "Marketing",
     image: "/marketing-psychology-event-promotion.jpg",
   },
-]
+];
 
-const categories = ["All", "Event Planning", "Technology", "Music", "Business", "Sustainability", "Marketing"]
+const categories = [
+  "All",
+  "Event Planning",
+  "Technology",
+  "Music",
+  "Business",
+  "Sustainability",
+  "Marketing",
+];
 
 export default function BlogPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4">
-
         {/* Hero Section */}
         <div className="text-center py-16">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
@@ -90,14 +95,19 @@ export default function BlogPage() {
             </span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Stay updated with the latest trends, tips, and insights from the world of events and ticketing.
+            Stay updated with the latest trends, tips, and insights from the
+            world of events and ticketing.
           </p>
         </div>
 
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-2 mb-12">
           {categories.map((category) => (
-            <Button key={category} variant={category === "All" ? "default" : "outline"} className="rounded-full">
+            <Button
+              key={category}
+              variant={category === "All" ? "default" : "outline"}
+              className="rounded-full"
+            >
               {category}
             </Button>
           ))}
@@ -117,9 +127,15 @@ export default function BlogPage() {
                 />
               </div>
               <div className="md:w-1/2 p-8">
-                <Badge className="mb-4 bg-cyan-700 text-white border-0">Featured</Badge>
-                <CardTitle className="text-2xl md:text-3xl mb-4 text-balance">{blogPosts[0].title}</CardTitle>
-                <p className="text-muted-foreground mb-6 text-pretty">{blogPosts[0].excerpt}</p>
+                <Badge className="mb-4 bg-cyan-700 text-white border-0">
+                  Featured
+                </Badge>
+                <CardTitle className="text-2xl md:text-3xl mb-4 text-balance">
+                  {blogPosts[0].title}
+                </CardTitle>
+                <p className="text-muted-foreground mb-6 text-pretty">
+                  {blogPosts[0].excerpt}
+                </p>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
                   <div className="flex items-center gap-1">
                     <User className="h-4 w-4" />
@@ -145,7 +161,10 @@ export default function BlogPage() {
         {/* Blog Posts Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {blogPosts.slice(1).map((post) => (
-            <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+            <Card
+              key={post.id}
+              className="overflow-hidden hover:shadow-lg transition-shadow"
+            >
               <div className="relative">
                 <Image
                   src={post.image || "/placeholder.svg"}
@@ -154,15 +173,19 @@ export default function BlogPage() {
                   height={200}
                   className="w-full h-48 object-cover"
                 />
-                <Badge className="absolute top-4 left-4 bg-cyan-700 text-white border-0">{post.category}</Badge>
+                <Badge className="absolute top-4 left-4 bg-cyan-700 text-white border-0">
+                  {post.category}
+                </Badge>
               </div>
               <CardHeader>
-                <CardTitle className="text-xl text-balance hover:text-cyan-600 transition-colors">
-                  <Link href={`/blog/${post.id}`}>{post.title}</Link>
+                <CardTitle className="text-xl text-balance hover:text-cyan-600 transition-colors cursor-pointer">
+                  {post.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground mb-4 text-pretty">{post.excerpt}</p>
+                <p className="text-muted-foreground mb-4 text-pretty">
+                  {post.excerpt}
+                </p>
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-1">
@@ -186,9 +209,12 @@ export default function BlogPage() {
 
         {/* Newsletter Signup */}
         <div className="bg-gradient-to-r from-cyan-700 to-slate-900 rounded-3xl p-8 md:p-12 text-center text-white mb-16 ">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Stay in the Loop</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Stay in the Loop
+          </h2>
           <p className="text-lg mb-8 opacity-90">
-            Get the latest event insights and ticketing tips delivered straight to your inbox.
+            Get the latest event insights and ticketing tips delivered straight
+            to your inbox.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input
@@ -196,10 +222,12 @@ export default function BlogPage() {
               placeholder="Enter your email"
               className="flex-1 px-4 py-3 rounded-full text-black outline-none ring-2 ring-cyan-300"
             />
-            <Button className="bg-white text-cyan-700 hover:bg-gray-100 rounded-full px-8">Subscribe</Button>
+            <Button className="bg-white text-cyan-700 hover:bg-gray-100 rounded-full px-8">
+              Subscribe
+            </Button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

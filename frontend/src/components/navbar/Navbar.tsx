@@ -67,20 +67,17 @@ const Navbar = () => {
                   <UserRound className=" bg-white text-black rounded-full w-8 h-6 " />
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent sideOffset={18} align="end">
+              <DropdownMenuContent className=" w-44 h-36 p-4" sideOffset={18} align="end">
                 <DropdownMenuLabel>{session.user?.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {/* <DropdownMenuItem>
-                  <User className=" h-[1.2rem] w-[1.2rem] mr-2" />
-                  Profile
-                </DropdownMenuItem> */}
                 <Link href={"/myTickets"}>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className=" text-sm">
                     <Ticket className=" h-[1.2rem] w-[1.2rem] mr-2" />
                     My Tickets
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem
+                  className=" text-sm"
                   onClick={() => signOut()}
                   variant="destructive"
                 >
