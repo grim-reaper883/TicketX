@@ -89,6 +89,12 @@ export default function BlogPage() {
       <div className="container mx-auto px-4">
         {/* Hero Section */}
         <div className="text-center py-16">
+          <Badge
+            variant="secondary"
+            className="mb-6 bg-cyan-700/30 text-cyan-200 border-cyan-600/40 font-medium"
+          >
+            Blogs
+          </Badge>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6">
             <span className="bg-gradient-to-r from-cyan-700 to-cyan-300 bg-clip-text text-transparent tracking-wide font-extrabold">
               TicketX Blog

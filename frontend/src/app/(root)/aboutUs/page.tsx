@@ -33,7 +33,7 @@ const AboutUs = () => {
   ];
 
   return (
-    <div className="min-h-screen w-full py-20 pt-28 px-6 overflow-y-auto">
+    <div className="min-h-screen w-full py-20 px-6 overflow-y-auto">
       <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <div className="text-center mb-20">
