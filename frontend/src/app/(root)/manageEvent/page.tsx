@@ -14,6 +14,7 @@ import { adminApi, ApiError } from "@/lib/api";
 import CreateEventForm from "@/components/CreateEventForm";
 import Swal from "sweetalert2";
 import BuyersModal from "@/components/BuyersModal";
+import Loading from "./loading";
 
 interface EventItem {
   _id: string;
@@ -149,8 +150,10 @@ const ManageEvent = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-white text-xl">Loading events...</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 py-8">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Loading key={index} />
+        ))}
       </div>
     );
   }
