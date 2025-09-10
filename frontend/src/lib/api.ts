@@ -72,6 +72,9 @@ export const adminApi = {
     apiRequest(`/events/${id}`, {
       method: "DELETE",
     }),
+
+  // Get buyers for an event 
+  getEventBuyers: (id: string) => apiRequest(`/events/${id}/buyers`),
 };
 
 // User ticket APIs

@@ -1,13 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Clock, DollarSign, Building2, Trash, Plus } from "lucide-react";
+import {
+  Clock,
+  DollarSign,
+  Building2,
+  Trash,
+  Plus,
+  SquarePen,
+  User,
+} from "lucide-react";
 import AdminGuard from "@/components/AdminGuard";
 import { adminApi, ApiError } from "@/lib/api";
 import CreateEventForm from "@/components/CreateEventForm";
 import Swal from "sweetalert2";
+import BuyersModal from "@/components/BuyersModal";
 
 interface EventItem {
   _id: string;
+  id: string;
   eventTitle: string;
   description: string;
   organizer: string;
@@ -22,6 +32,21 @@ const ManageEvent = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingEvent, setEditingEvent] = useState<EventItem | null>(null);
+
+  const [buyersOpen, setBuyersOpen] = useState(false);
+  const [buyersLoading, setBuyersLoading] = useState(false);
+  const [buyersError, setBuyersError] = useState<string | null>(null);
+  const [buyers, setBuyers] = useState<
+    {
+      id: string;
+      name: string;
+      email: string;
+      quantity?: number;
+      purchasedAt?: string;
+    }[]
+  >([]);
+  const [buyersEventTitle, setBuyersEventTitle] = useState<string>("");
 
   useEffect(() => {
     fetchEvents();
@@ -51,36 +76,65 @@ const ManageEvent = () => {
     }
   };
 
-const handleDeleteEvent = async (eventId: string) => {
-  Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!"
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        await adminApi.deleteEvent(eventId);
-        setEvents(events.filter((event) => event._id !== eventId));
+  const handleDeleteEvent = async (eventId: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await adminApi.deleteEvent(eventId);
+          setEvents(events.filter((event) => event._id !== eventId));
 
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your event has been deleted.",
-          icon: "success"
-        });
-      } catch (err) {
-        if (err instanceof ApiError) {
-          Swal.fire("Error", `Failed to delete event: ${err.message}`, "error");
-        } else {
-          Swal.fire("Error", "Failed to delete event", "error");
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your event has been deleted.",
+            icon: "success",
+          });
+        } catch (err) {
+          if (err instanceof ApiError) {
+            Swal.fire(
+              "Error",
+              `Failed to delete event: ${err.message}`,
+              "error"
+            );
+          } else {
+            Swal.fire("Error", "Failed to delete event", "error");
+          }
         }
       }
+    });
+  };
+
+  const handleEditEvent = (eventId: string) => {
+    const found = events.find((e) => e._id === eventId) || null;
+    setEditingEvent(found);
+    setShowCreateForm(true);
+  };
+
+  const handleShowBuyers = async (eventMongoId: string) => {
+    const evt = events.find((e) => e._id === eventMongoId);
+    setBuyersEventTitle(evt?.eventTitle || "Ticket Buyers");
+    setBuyersOpen(true);
+    setBuyersLoading(true);
+    setBuyersError(null);
+    try {
+      if (!evt?.id) throw new Error("Event is missing");
+      const res = await adminApi.getEventBuyers(evt.id);
+      const data = await res.json();
+      setBuyers(data);
+    } catch (err) {
+      if (err instanceof ApiError) setBuyersError(err.message);
+      else setBuyersError("Failed to load buyers");
+    } finally {
+      setBuyersLoading(false);
     }
-  });
-};
+  };
 
   const formatDeadline = (dateString: string) => {
     const date = new Date(dateString);
@@ -128,7 +182,10 @@ const handleDeleteEvent = async (eventId: string) => {
 
           <div
             className="mt-7 cursor-pointer bg-gradient-to-r from-cyan-700 to-slate-900 rounded-xl p-3 text-center font-bold max-w-xl mx-auto hover:from-cyan-600 hover:to-slate-800 transition-all"
-            onClick={() => setShowCreateForm(!showCreateForm)}
+            onClick={() => {
+              setEditingEvent(null);
+              setShowCreateForm(true);
+            }}
           >
             <h2 className="text-2xl font-extrabold flex items-center justify-center">
               <Plus className="mr-2" />
@@ -221,9 +278,20 @@ const handleDeleteEvent = async (eventId: string) => {
                 {/* Event ID and Delete */}
                 <div className="mt-4 pt-4 border-t border-gray-800">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-xs">
-                      Event ID: {event._id}
-                    </span>
+                    <button
+                      onClick={() => handleEditEvent(event._id)}
+                      className=" cursor-pointer hover:text-gray-500 transition-colors"
+                      title="Edit Event"
+                    >
+                      <SquarePen className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleShowBuyers(event._id)}
+                      className=" cursor-pointer hover:text-gray-500 transition-colors"
+                      title="View Buyers"
+                    >
+                      <User className="w-5 h-5" />
+                    </button>
                     <button
                       onClick={() => handleDeleteEvent(event._id)}
                       className="text-red-500 cursor-pointer hover:text-red-400 transition-colors"
@@ -240,13 +308,38 @@ const handleDeleteEvent = async (eventId: string) => {
       </div>
       {showCreateForm && (
         <CreateEventForm
+          eventId={editingEvent?._id}
+          initialData={
+            editingEvent
+              ? {
+                  eventTitle: editingEvent.eventTitle,
+                  description: editingEvent.description,
+                  organizer: editingEvent.organizer,
+                  ticketLimit: editingEvent.ticketLimit,
+                  deadline: editingEvent.deadline,
+                  price: editingEvent.price,
+                }
+              : undefined
+          }
           onSuccess={() => {
             setShowCreateForm(false);
+            setEditingEvent(null);
             fetchEvents();
           }}
-          onCancel={() => setShowCreateForm(false)}
+          onCancel={() => {
+            setShowCreateForm(false);
+            setEditingEvent(null);
+          }}
         />
       )}
+      <BuyersModal
+        open={buyersOpen}
+        onClose={() => setBuyersOpen(false)}
+        loading={buyersLoading}
+        buyers={buyers}
+        title={buyersEventTitle}
+        error={buyersError}
+      />
     </AdminGuard>
   );
 };

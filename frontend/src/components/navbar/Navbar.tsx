@@ -92,7 +92,7 @@ const Navbar = () => {
             <Link href={"/signin"}>
               <Button
                 onClick={() => signIn()}
-                className=" rounded-full font-bold"
+                className=" cursor-pointer rounded-full font-bold"
               >
                 Sign In
               </Button>
