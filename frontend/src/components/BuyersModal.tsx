@@ -1,6 +1,4 @@
-"use client";
 
-import React from "react";
 
 interface Buyer {
   id: string;
@@ -19,7 +17,14 @@ interface BuyersModalProps {
   error?: string | null;
 }
 
-const BuyersModal = ({ open, onClose, loading, buyers, title = "Ticket Buyers", error }: BuyersModalProps) => {
+const BuyersModal = ({
+  open,
+  onClose,
+  loading,
+  buyers,
+  title = "Ticket Buyers",
+  error,
+}: BuyersModalProps) => {
   if (!open) return null;
 
   return (
@@ -27,7 +32,9 @@ const BuyersModal = ({ open, onClose, loading, buyers, title = "Ticket Buyers", 
       <div className="bg-gray-900 rounded-xl p-6 w-full max-w-lg mx-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold text-white">{title}</h2>
-          <button onClick={onClose} className="text-gray-300 hover:text-white">✕</button>
+          <button onClick={onClose} className="text-gray-300 hover:text-white">
+            ✕
+          </button>
         </div>
 
         {loading ? (
@@ -43,11 +50,15 @@ const BuyersModal = ({ open, onClose, loading, buyers, title = "Ticket Buyers", 
             {buyers.map((b) => (
               <li key={b.id} className="py-3 flex items-center justify-between">
                 <div>
-                  <div className="text-white font-medium">{b.name || b.email}</div>
+                  <div className="text-white font-medium">
+                    {b.name || b.email}
+                  </div>
                   <div className="text-gray-400 text-sm">{b.email}</div>
                 </div>
                 <div className="text-gray-300 text-sm">
-                  {b.quantity ? `${b.quantity} ticket${b.quantity > 1 ? "s" : ""}` : null}
+                  {b.quantity
+                    ? `${b.quantity} ticket${b.quantity > 1 ? "s" : ""}`
+                    : null}
                 </div>
               </li>
             ))}
