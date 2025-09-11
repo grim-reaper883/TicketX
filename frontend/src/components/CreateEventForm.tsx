@@ -14,6 +14,7 @@ interface CreateEventFormProps {
     ticketLimit: number;
     deadline: string;
     price: number;
+    ticketsSold: number;
   };
 }
 
@@ -33,6 +34,7 @@ const CreateEventForm = ({
       : "",
     price: initialData ? String(initialData.price) : "",
   });
+  const ticketsSold = initialData?.ticketsSold ?? 0;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,6 +56,15 @@ const CreateEventForm = ({
     e.preventDefault();
     setLoading(true);
     setError(null);
+
+    const parsedLimit = parseInt(formData.ticketLimit);
+    if (eventId && parsedLimit < ticketsSold) {
+      setLoading(false);
+      setError(
+        `Ticket limit cannot be less than tickets already sold (${ticketsSold}).`
+      );
+      return;
+    }
 
     const payload = {
       eventTitle: formData.eventTitle,
@@ -97,7 +108,7 @@ const CreateEventForm = ({
             {error}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} noValidate className="space-y-3">
           <input
             className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white"
             name="eventTitle"
@@ -128,7 +139,7 @@ const CreateEventForm = ({
             type="number"
             name="ticketLimit"
             placeholder="Ticket limit"
-            min="1"
+            // min={Math.max(1, ticketsSold)}
             required
             value={formData.ticketLimit}
             onChange={onChange}
