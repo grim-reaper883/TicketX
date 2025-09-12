@@ -321,6 +321,7 @@ const ManageEvent = () => {
                   ticketLimit: editingEvent.ticketLimit,
                   deadline: editingEvent.deadline,
                   price: editingEvent.price,
+                  ticketsSold: editingEvent.ticketsSold,
                 }
               : undefined
           }
